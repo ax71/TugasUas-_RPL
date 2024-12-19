@@ -1,0 +1,17 @@
+<link rel="stylesheet" type="text/css" href="assets/style.php">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<nav class="navbar">
+    <div class="container">
+        <a href="index.php" class="logo">BooTIK_ID</a>
+        <ul class="nav-links">
+            <li><a href="index.php">Beranda</a></li>
+            <?php if(isset($_SESSION['user_id'])): ?>
+            <li><a href="profile.php">Profil</a></li>
+            <li><a href="logout.php">Logout</a></li>
+            <?php else: ?>
+            <li><a href="login.php">Login</a></li>
+            <li><a href="register.php">Register</a></li>
+            <?php endif; ?>
+        </ul>
+    </div>
+</nav>
