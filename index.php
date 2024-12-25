@@ -73,6 +73,19 @@ session_start(); // Memulai session
         .movie-info a:hover {
             background-color: #218838;
         }
+
+        .no-result {
+            width: 100%;
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .movie-card {
+            display: flex;
+            /* default display */
+        }
     </style>
 </head>
 
@@ -85,8 +98,7 @@ session_start(); // Memulai session
     <!-- fitur search film -->
     <div class="search-box-container">
         <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Search Movie" />
-            <button onclick="searchMovie()">Search</button>
+            <input type="text" id="searchInput" placeholder="Search Movie" onkeyup="searchMovie(this.value)" />
         </div>
     </div>
     <div id="movieResults"></div>
@@ -141,19 +153,48 @@ session_start(); // Memulai session
 
     <script>
         // Array Contoh Film
-        const movies = ["..."];
+        function searchMovie(searchValue) {
+            const movieContainer = document.querySelector(".movie-list");
 
-        function searchMovie() {
-            const input = document.getElementById("searchInput").value.toLowerCase();
-            const results = movies.filter((movie) =>
-                movie.toLowerCase().includes(input)
-            );
+            // Ambil semua movie card yang ada
+            const movieCards = document.querySelectorAll('.movie-card');
 
-            const resultDiv = document.getElementById("movieResults");
-            if (results.length > 0) {
-                resultDiv.innerHTML = "Movies Found: " + results.join(", ");
+            // Ubah input pencarian menjadi lowercase
+            searchValue = searchValue.toLowerCase();
+
+            // Loop setiap movie card
+            movieCards.forEach(card => {
+                // Ambil judul film dari card
+                const title = card.querySelector('.movie-info h3').textContent.toLowerCase();
+
+                // Cek apakah judul mengandung kata yang dicari
+                if (title.includes(searchValue)) {
+                    card.style.display = 'flex'; // Tampilkan card jika sesuai
+                } else {
+                    card.style.display = 'none'; // Sembunyikan card jika tidak sesuai
+                }
+            });
+
+            // Cek apakah ada film yang ditampilkan
+            const visibleMovies = document.querySelectorAll('.movie-card[style="display: flex;"]');
+            if (visibleMovies.length === 0 && searchValue !== '') {
+                const noResult = document.createElement('p');
+                noResult.textContent = "Tidak ada film yang ditemukan";
+                noResult.className = "no-result";
+
+                // Hapus pesan "tidak ditemukan" sebelumnya jika ada
+                const existingNoResult = document.querySelector('.no-result');
+                if (existingNoResult) {
+                    existingNoResult.remove();
+                }
+
+                movieContainer.appendChild(noResult);
             } else {
-                resultDiv.innerHTML = "No Movies Found!";
+                // Hapus pesan "tidak ditemukan" jika ada hasil
+                const noResult = document.querySelector('.no-result');
+                if (noResult) {
+                    noResult.remove();
+                }
             }
         }
 
